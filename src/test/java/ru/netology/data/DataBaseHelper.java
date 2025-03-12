@@ -1,67 +1,48 @@
 package ru.netology.data;
 
-import lombok.Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+
+import lombok.SneakyThrows;
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 public class DataBaseHelper {
-    private static final QueryRunner runner = new QueryRunner();
-    private static final String url = System.getProperty("db.url", "jdbc:mysql://localhost:3366/app");
-    private static final String user = System.getProperty("db.user", "vladi");
-    private static final String password = System.getProperty("db.password", "password");
+    private static final String url = System.getProperty("db.url");
+    private static final String user = "vladi";
+    private static final String password = "password";
 
-    private static Connection getConnection() throws SQLException {
+    @SneakyThrows
+    private static Connection getConnection() {
         return DriverManager.getConnection(url, user, password);
     }
 
-    @Data
-    public static class OrderEntity {
-        private String credit_id;
-        private String payment_id;
-    }
-
-    public static OrderEntity getOrder() throws SQLException {
-        var sql = "SELECT credit_id, payment_id FROM order_entity ORDER BY created DESC LIMIT 1;";
-        try (var conn = getConnection()) {
-            return runner.query(conn, sql, new BeanHandler<>(OrderEntity.class));
+    @SneakyThrows
+    private static String getValue(String query) {
+        var runner = new QueryRunner();
+        var value = "";
+        try (var conn = DataBaseHelper.getConnection()) {
+            value = runner.query(conn, query, new ScalarHandler<>());
         }
+        return value;
     }
 
-    @Data
-    public static class PaymentEntity {
-        private String status;
-        private String transaction_id;
+    @SneakyThrows
+    public static String getDebitCardTransactionStatus() {
+        return getValue("SELECT status FROM payment_entity;");
     }
 
-    public static PaymentEntity getPayment() throws SQLException {
-        var sql = "SELECT status, transaction_id FROM payment_entity ORDER BY created DESC LIMIT 1;";
-        try (var conn = getConnection()) {
-            return runner.query(conn, sql, new BeanHandler<>(PaymentEntity.class));
-        }
+    @SneakyThrows
+    public static String getCreditCardTransactionStatus() {
+        return getValue("SELECT status FROM credit_request_entity;");
     }
 
-    @Data
-    public static class CreditRequestEntity {
-        private String bank_id;
-        private String status;
-    }
-
-    public static CreditRequestEntity getCredit() throws SQLException {
-        var sql = "SELECT bank_id, status FROM credit_request_entity ORDER BY created DESC LIMIT 1;";
-        try (var conn = getConnection()) {
-            return runner.query(conn, sql, new BeanHandler<>(CreditRequestEntity.class));
-        }
-    }
-
-    public static void clearAllData() throws SQLException {
-        try (var conn = getConnection()) {
-            runner.update(conn, "DELETE FROM credit_request_entity");
-            runner.update(conn, "DELETE FROM payment_entity");
-            runner.update(conn, "DELETE FROM order_entity");
-        }
+    @SneakyThrows
+    public static void cleanDB() {
+        var connection = DataBaseHelper.getConnection();
+        connection.createStatement().executeUpdate("TRUNCATE credit_request_entity;");
+        connection.createStatement().executeUpdate("TRUNCATE payment_entity;");
+        connection.createStatement().executeUpdate("TRUNCATE order_entity;");
     }
 }
 

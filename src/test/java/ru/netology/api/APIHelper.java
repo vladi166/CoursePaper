@@ -17,7 +17,7 @@ public class APIHelper {
             .log(LogDetail.ALL)              // Логирование запросов для облегчения отладки тестов
             .build();
 
-    public String sendPostStatusSuccess(DataGenerator.AuthInfo holder, String path, int statusCode) {
+    public static String sendPostStatusSuccess(DataGenerator.AuthInfo holder, String path, int statusCode) {
         String status =
                 given()
                         .spec(requestSpec)  // Подключаем ранее созданную спецификацию
