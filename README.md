@@ -15,7 +15,7 @@
 1. В терминале 1 в корне проекта запустить контейнеры: `docker-compose up -d`
 2. В терминале 2 запустить приложение: `java -jar .\artifacts\aqa-shop.jar --spring.datasource.url=jdbc:mysql://localhost:3366/app`
 3. Проверить, что приложение успешно запустилось (ввести URL в браузере Сhrome: `http://localhost/8080`)
-4. В Windows запуск тестов `gradlew clean test -Dselenide.headless=true -Ddatasource.url=jdbc:mysql://localhost:3306/app_db`
+4. В Windows запуск тестов `./gradlew clean test "-Dselenide.headless=true" "-Ddatasource.url=jdbc:mysql://localhost:3366/app_db"`
 5. Создать отчёт Allure и открыть в браузере `.\gradlew allureServe`
 6. Закрыть отчёт в терминале 3:   `CTRL + C --> y --> Enter`
 7. Остановить приложение в терминале 2: `CTRL + C`
