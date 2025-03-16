@@ -74,7 +74,7 @@ public class DataGenerator {
     }
 
 
-    private static String generateLastYear() {
+    private static String generatePastYear() {
         LocalDate yearLast = LocalDate.now().minusYears(1);
         return yearLast.format(DateTimeFormatter.ofPattern("yy"));
     }
@@ -84,7 +84,7 @@ public class DataGenerator {
         return yearExpired.format(DateTimeFormatter.ofPattern("yy"));
     }
 
-    private static String generateYearBeforeExpirationDate() {
+    private static String generateLastYearExpirationDate() {
         LocalDate yearBeforeExpired = LocalDate.now().plusYears(5);
         return yearBeforeExpired.format(DateTimeFormatter.ofPattern("yy"));
     }
@@ -293,7 +293,7 @@ public class DataGenerator {
             return new AuthInfo(
                     getApprovedCardNumber(),
                     getRandomMonth(),
-                    generateLastYear(),
+                    generatePastYear(),
                     getHolder(),
                     getCVC()
             );
@@ -309,11 +309,11 @@ public class DataGenerator {
             );
         }
 
-        public static AuthInfo getYearBeforeExpirationDate() {// последний год обслуживания карты
+        public static AuthInfo getLastYearExpirationDate() {// последний год обслуживания карты
             return new AuthInfo(
                     getApprovedCardNumber(),
                     getRandomMonth(),
-                    generateYearBeforeExpirationDate(),
+                    generateLastYearExpirationDate(),
                     getHolder(),
                     getCVC()
             );
