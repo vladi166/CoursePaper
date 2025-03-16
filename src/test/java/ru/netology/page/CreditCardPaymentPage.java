@@ -6,6 +6,7 @@ import ru.netology.data.DataGenerator;
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
@@ -70,5 +71,25 @@ public class CreditCardPaymentPage {
 
     public void errorMessageByIncorrectFormatYearField() {
         $(byText("Истёк срок действия карты")).shouldBe(Condition.visible, Duration.ofSeconds(20));
+    }
+
+    public void setUpCardNumberField(String number, String digit) {
+        cardNumberField.setValue(number + digit);
+        cardNumberField.shouldHave(value(number));
+    }
+
+    public void setUpMonthField(String month, String digit) {
+        monthField.setValue(month + digit);
+        monthField.shouldHave(value(month));
+    }
+
+    public void setUpYearField(String year, String digit) {
+        yearField.setValue(year + digit);
+        yearField.shouldHave(value(year));
+    }
+
+    public void setUpCvcField(String cvc, String digit) {
+        cvcField.setValue(cvc + digit);
+        cvcField.shouldHave(value(cvc));
     }
 }

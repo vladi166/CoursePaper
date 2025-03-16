@@ -3,7 +3,6 @@ package ru.netology.test;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
-import ru.netology.api.APIHelper;
 import ru.netology.data.DataBaseHelper;
 import ru.netology.data.DataGenerator;
 import ru.netology.page.DebitCardPaymentPage;
@@ -58,7 +57,7 @@ public class DebitCardTest {
 
     //Поле 'Номер карты' заполнено рандомным номером;
     @Test
-    void shouldGetErrorIfInvalidCardNumber() {
+    void shouldGetErrorIfAnyCardNumber() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getAnyCardNumberUser();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -188,7 +187,7 @@ public class DebitCardTest {
 
     // прошлый год
     @Test
-    void LastYear() {
+    void PastYear() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getPastYearCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -206,10 +205,10 @@ public class DebitCardTest {
 
     //последний год обслуживания карты
     @Test
-    void shouldGetErrorIfYearBeforeExpirationDate() {
+    void IfLastYearExpirationDate() {
         debitCard = titlePage.debitCardPayment();
-        var invalidDebitCard = DataGenerator.FormPayment.getYearBeforeExpirationDate();
-        debitCard.invalidFillFieldDebitCard(invalidDebitCard);
+        var validDebitCard = DataGenerator.FormPayment.getLastYearExpirationDate();
+        debitCard.validFillFieldDebitCard(validDebitCard);
         debitCard.successMessage();
         assertEquals("APPROVED", DataBaseHelper.getDebitCardTransactionStatus());
     }
@@ -230,6 +229,15 @@ public class DebitCardTest {
         var year = DataGenerator.getYearFutureInPeriod();
         var digit = DataGenerator.getOneDigit();
         debitCard.setUpYearField(year, digit);
+    }
+
+    // ввод букв
+    @Test
+    void InYearFieldConsistsOfLetters() {
+        debitCard = titlePage.debitCardPayment();
+        var invalidDebitCard = DataGenerator.FormPayment.getYearFieldConsistsOfLetters();
+        debitCard.invalidFillFieldDebitCard(invalidDebitCard);
+        debitCard.errorMessageIncorrectFormat();
     }
 
     //Поле 'Год' состоит из спецсимволов;
@@ -254,8 +262,8 @@ public class DebitCardTest {
     @Test
     void CardWithCurrentPeriod() {
         debitCard = titlePage.debitCardPayment();
-        var invalidDebitCard = DataGenerator.FormPayment.getCardWithCurrentPeriod();
-        debitCard.invalidFillFieldDebitCard(invalidDebitCard);
+        var validDebitCard = DataGenerator.FormPayment.getCardWithCurrentPeriod();
+        debitCard.validFillFieldDebitCard(validDebitCard);
         debitCard.successMessage();
         assertEquals("APPROVED", DataBaseHelper.getDebitCardTransactionStatus());
     }
@@ -311,8 +319,8 @@ public class DebitCardTest {
     @Test
     void HolderFieldWithDoubleSurname() {
         debitCard = titlePage.debitCardPayment();
-        var invalidDebitCard = DataGenerator.FormPayment.getOwnerFieldWithDoubleSurname();
-        debitCard.invalidFillFieldDebitCard(invalidDebitCard);
+        var validDebitCard = DataGenerator.FormPayment.getOwnerFieldWithDoubleSurname();
+        debitCard.validFillFieldDebitCard(validDebitCard);
         debitCard.successMessage();
         assertEquals("APPROVED", DataBaseHelper.getDebitCardTransactionStatus());
     }
