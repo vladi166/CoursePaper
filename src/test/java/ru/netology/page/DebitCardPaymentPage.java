@@ -55,33 +55,33 @@ public class DebitCardPaymentPage {
     }
 
     public void successMessage() {
-        messageSuccess.shouldBe(visible, Duration.ofSeconds(16));
+        messageSuccess.shouldBe(visible, Duration.ofSeconds(10));
         closer.first().click();
         messageSuccess.shouldBe(hidden);
         messageError.shouldBe(hidden);
     }
 
     public void errorMessage() {
-        messageError.shouldBe(visible, Duration.ofSeconds(16));
+        messageError.shouldBe(visible, Duration.ofSeconds(10));
         closer.last().click();
         messageError.shouldBe(hidden);
         messageSuccess.shouldBe(hidden);
     }
 
     public void errorMessageIncorrectFormat() {
-        $(byText("Неверный формат")).shouldBe(Condition.visible, Duration.ofSeconds(20));
+        $(byText("Неверный формат")).shouldBe(Condition.visible);
     }
 
     public void errorMessageEmptyField() {
-        $(byText("Поле обязательно для заполнения")).shouldBe(Condition.visible, Duration.ofSeconds(20));
+        $(byText("Поле обязательно для заполнения")).shouldBe(Condition.visible);
     }
 
     public void errorMessageCardExpirationDateIncorrect() {
-        $(byText("Неверно указан срок действия карты")).shouldBe(Condition.visible, Duration.ofSeconds(20));
+        $(byText("Неверно указан срок действия карты")).shouldBe(Condition.visible);
     }
 
     public void errorMessageByIncorrectFormatYearField() {
-        $(byText("Истёк срок действия карты")).shouldBe(Condition.visible, Duration.ofSeconds(20));
+        $(byText("Истёк срок действия карты")).shouldBe(Condition.visible);
     }
 
     public void setUpCardNumberField(String number, String digit) {

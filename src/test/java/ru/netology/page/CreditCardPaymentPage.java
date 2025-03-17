@@ -50,27 +50,27 @@ public class CreditCardPaymentPage {
     }
 
     public void successMessage() {
-        $(".notification_status_ok").shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification_status_ok").shouldBe(visible, Duration.ofSeconds(10));
     }
 
     public void errorMessage() {
-        $(".notification_status_error").shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification_status_error").shouldBe(visible, Duration.ofSeconds(10));
     }
 
     public void errorMessageIncorrectFormat() {
-        $(byText("Неверный формат")).shouldBe(Condition.visible, Duration.ofSeconds(20));
+        $(byText("Неверный формат")).shouldBe(Condition.visible);
     }
 
     public void errorMessageEmptyField() {
-        $(byText("Поле обязательно для заполнения")).shouldBe(Condition.visible, Duration.ofSeconds(20));
+        $(byText("Поле обязательно для заполнения")).shouldBe(Condition.visible);
     }
 
     public void errorMessageCardExpirationDateIncorrect() {
-        $(byText("Неверно указан срок действия карты")).shouldBe(Condition.visible, Duration.ofSeconds(20));
+        $(byText("Неверно указан срок действия карты")).shouldBe(Condition.visible);
     }
 
     public void errorMessageByIncorrectFormatYearField() {
-        $(byText("Истёк срок действия карты")).shouldBe(Condition.visible, Duration.ofSeconds(20));
+        $(byText("Истёк срок действия карты")).shouldBe(Condition.visible);
     }
 
     public void setUpCardNumberField(String number, String digit) {
