@@ -39,10 +39,12 @@ public class DataBaseHelper {
 
     @SneakyThrows
     public static void cleanDB() {
-        var connection = DataBaseHelper.getConnection();
-        connection.createStatement().executeUpdate("TRUNCATE credit_request_entity;");
-        connection.createStatement().executeUpdate("TRUNCATE payment_entity;");
-        connection.createStatement().executeUpdate("TRUNCATE order_entity;");
+        try (var connection = DataBaseHelper.getConnection();
+             var statement = connection.createStatement()) {
+            statement.executeUpdate("TRUNCATE credit_request_entity;");
+            statement.executeUpdate("TRUNCATE payment_entity;");
+            statement.executeUpdate("TRUNCATE order_entity;");
+        }
     }
 }
 
