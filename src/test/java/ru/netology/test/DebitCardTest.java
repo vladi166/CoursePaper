@@ -10,6 +10,7 @@ import ru.netology.page.TitlePage;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.netology.data.DataBaseHelper.cleanDB;
 
 public class DebitCardTest {
 
@@ -26,6 +27,10 @@ public class DebitCardTest {
         titlePage = open("http://localhost:8080", TitlePage.class);
     }
 
+    @BeforeEach
+    void setup() {
+        cleanDB();
+    }
 
     @AfterAll
     static void tearDownAll() {
@@ -47,7 +52,7 @@ public class DebitCardTest {
 
     //Номер карты со статусом: "DECLINED";
     @Test
-    void GetErrorIfInvalidCardNumber() {
+    void getErrorIfInvalidCardNumber() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getDeclinedUser();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -75,7 +80,7 @@ public class DebitCardTest {
 
     //Поле 'Номер карты' не должно принимать более 16 цифр
     @Test
-    void UseMoreDigitsInCardNumber() {
+    void useMoreDigitsInCardNumber() {
         debitCard = titlePage.debitCardPayment();
         var cardNumber = DataGenerator.getRandomCardNumber();
         var digit = DataGenerator.getOneDigit();
@@ -84,7 +89,7 @@ public class DebitCardTest {
 
     //буквы и цифры в поле
     @Test
-    void CardNumberWithWordInNumber() {
+    void cardNumberWithWordInNumber() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getCardNumberWithWordInNumber();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -93,7 +98,7 @@ public class DebitCardTest {
 
     // поле состоит из букв
     @Test
-    void CardNumberFieldConsistsLetters() {
+    void cardNumberFieldConsistsLetters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getCardNumberFieldConsistsOfLetters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -102,7 +107,7 @@ public class DebitCardTest {
 
     // поле состоит из специальных символов
     @Test
-    void CardNumberFieldWithSpecialCharacters() {
+    void cardNumberFieldWithSpecialCharacters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getCardNumberWithoutDigit();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -111,7 +116,7 @@ public class DebitCardTest {
 
     // пустое поле
     @Test
-    void CardNumberFieldIsEmpty() {
+    void cardNumberFieldIsEmpty() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getEmptyCardNumber();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -122,7 +127,7 @@ public class DebitCardTest {
 
     //нули в поле
     @Test
-    void UseMonthDoubleZero() {
+    void useMonthDoubleZero() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getMonthDoubleZeroCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -131,7 +136,7 @@ public class DebitCardTest {
 
     //Поле 'Месяц' заполнено несуществующей датой;
     @Test
-    void InvalidMonthField() {
+    void invalidMonthField() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getMonthOverCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -140,7 +145,7 @@ public class DebitCardTest {
 
     //Поле 'Месяц' состоит из одного символа;
     @Test
-    void MonthFieldConsistsOneCharacters() {
+    void monthFieldConsistsOneCharacters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getOneDigitMonthCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -149,7 +154,7 @@ public class DebitCardTest {
 
     //более 2 цифр
     @Test
-    void UseMoreDigitsInMonth() {
+    void useMoreDigitsInMonth() {
         debitCard = titlePage.debitCardPayment();
         var month = DataGenerator.getRandomMonth();
         var digit = DataGenerator.getOneDigit();
@@ -158,7 +163,7 @@ public class DebitCardTest {
 
     //пустое поле
     @Test
-    void IfMonthFieldEmpty() {
+    void ifMonthFieldEmpty() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getEmptyMonthFieldCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -167,7 +172,7 @@ public class DebitCardTest {
 
     //Поле 'Месяц' состоит из букв
     @Test
-    void MonthFieldConsistsOfLetters() {
+    void monthFieldConsistsOfLetters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getMonthFieldConsistsOfLetters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -176,7 +181,7 @@ public class DebitCardTest {
 
     //Поле 'Месяц' состоит из спецсимволов
     @Test
-    void MonthFieldWithSpecialCharacters() {
+    void monthFieldWithSpecialCharacters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getMonthFieldWithSpecialCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -187,7 +192,7 @@ public class DebitCardTest {
 
     // прошлый год
     @Test
-    void PastYear() {
+    void pastYear() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getPastYearCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -196,7 +201,7 @@ public class DebitCardTest {
 
     //год, за пределами срока обслуживания карты
     @Test
-    void FutureYearOverCard() {
+    void futureYearOverCard() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getFutureYearOverCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -205,7 +210,7 @@ public class DebitCardTest {
 
     //последний год обслуживания карты
     @Test
-    void IfLastYearExpirationDate() {
+    void ifLastYearExpirationDate() {
         debitCard = titlePage.debitCardPayment();
         var validDebitCard = DataGenerator.FormPayment.getLastYearExpirationDate();
         debitCard.validFillFieldDebitCard(validDebitCard);
@@ -224,7 +229,7 @@ public class DebitCardTest {
 
     //более 2 цифр
     @Test
-    void InFieldUseMoreDigitsInYear() {
+    void inFieldUseMoreDigitsInYear() {
         debitCard = titlePage.debitCardPayment();
         var year = DataGenerator.getYearFutureInPeriod();
         var digit = DataGenerator.getOneDigit();
@@ -233,7 +238,7 @@ public class DebitCardTest {
 
     // ввод букв
     @Test
-    void InYearFieldConsistsOfLetters() {
+    void inYearFieldConsistsOfLetters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getYearFieldConsistsOfLetters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -242,7 +247,7 @@ public class DebitCardTest {
 
     //Поле 'Год' состоит из спецсимволов;
     @Test
-    void YearFieldWithSpecialCharacters() {
+    void yearFieldWithSpecialCharacters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getYearFieldWithSpecialCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -251,7 +256,7 @@ public class DebitCardTest {
 
     //Поле 'Год' пустое;
     @Test
-    void GetErrorIfYearFieldEmpty() {
+    void getErrorIfYearFieldEmpty() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getEmptyYearFieldCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -260,7 +265,7 @@ public class DebitCardTest {
 
     // проверка на текущие месяц и год
     @Test
-    void CardWithCurrentPeriod() {
+    void cardWithCurrentPeriod() {
         debitCard = titlePage.debitCardPayment();
         var validDebitCard = DataGenerator.FormPayment.getCardWithCurrentPeriod();
         debitCard.validFillFieldDebitCard(validDebitCard);
@@ -272,7 +277,7 @@ public class DebitCardTest {
 
     // поле на кириллице
     @Test
-    void GetErrorIfHolderFieldInCyrillic() {
+    void getErrorIfHolderFieldInCyrillic() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getCyrillicHolderCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -281,7 +286,7 @@ public class DebitCardTest {
 
     // ввод спецсимволов
     @Test
-    void GetErrorIfHolderFieldWithSpecialCharacters() {
+    void getErrorIfHolderFieldWithSpecialCharacters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getSymbolHolderCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -290,7 +295,7 @@ public class DebitCardTest {
 
     // ввод букв и цифр
     @Test
-    void UseCardWithSymbolHolder() {
+    void useCardWithSymbolHolder() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getOwnerFieldWithLettersAndNumbers();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -299,7 +304,7 @@ public class DebitCardTest {
 
     // пустое поле
     @Test
-    void FieldEmptyHolder() {
+    void fieldEmptyHolder() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getEmptyHolderFieldCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -308,7 +313,7 @@ public class DebitCardTest {
 
     // ввод одной буквы
     @Test
-    void HolderFieldConsistsOneCharacters() {
+    void holderFieldConsistsOneCharacters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getOwnerFieldConsistsOneCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -317,7 +322,7 @@ public class DebitCardTest {
 
     // ввод двойной фамилии
     @Test
-    void HolderFieldWithDoubleSurname() {
+    void holderFieldWithDoubleSurname() {
         debitCard = titlePage.debitCardPayment();
         var validDebitCard = DataGenerator.FormPayment.getOwnerFieldWithDoubleSurname();
         debitCard.validFillFieldDebitCard(validDebitCard);
@@ -327,7 +332,7 @@ public class DebitCardTest {
 
     // проверка на максимальный размер
     @Test
-    void HolderFieldWithMaxLength() {
+    void holderFieldWithMaxLength() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getOwnerFieldWithMaxLength();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -338,7 +343,7 @@ public class DebitCardTest {
 
     // ввод одной цифры
     @Test
-    void CVCFieldConsistsOneCharacters() {
+    void fieldCVCConsistsOneCharacters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getOneDigitCvcCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -347,7 +352,7 @@ public class DebitCardTest {
 
     // ввод 3 цифр
     @Test
-    void UseMoreDigitsInCvc() {
+    void useMoreDigitsInCvc() {
         debitCard = titlePage.debitCardPayment();
         var cvc = DataGenerator.getCVC();
         var digit = DataGenerator.getOneDigit();
@@ -356,7 +361,7 @@ public class DebitCardTest {
 
     // ввод спецсимволов
     @Test
-    void CVCFieldWithSpecialCharacters() {
+    void fieldCVCWithSpecialCharacters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getCVCFieldWithSpecialCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -365,7 +370,7 @@ public class DebitCardTest {
 
     // ввод букв
     @Test
-    void CVCFieldConsistsOfLetters() {
+    void fieldCVCConsistsOfLetters() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getCVCFieldConsistsOfLetters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
@@ -374,7 +379,7 @@ public class DebitCardTest {
 
     // пустое поле
     @Test
-    void CVCFieldEmpty() {
+    void fieldCVCEmpty() {
         debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.FormPayment.getEmptyCvcFieldCard();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);

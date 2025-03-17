@@ -4,12 +4,14 @@ import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.api.APIHelper;
 import ru.netology.data.DataBaseHelper;
 import ru.netology.data.DataGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.netology.data.DataBaseHelper.cleanDB;
 
 public class DebitAPITest {
     private final APIHelper apiHelper = new APIHelper();
@@ -17,6 +19,11 @@ public class DebitAPITest {
     @BeforeAll
     static void setUpAll() {
         SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @BeforeEach
+    void setup() {
+        cleanDB();
     }
 
     @AfterAll
@@ -35,6 +42,7 @@ public class DebitAPITest {
         var statusCode = DataGenerator.getStatusCodeSuccess();
         var response = apiHelper.sendPostStatusSuccess(validDebitCard, pathForPay, statusCode);
         assertEquals(DataGenerator.getApprovedStatus(), response);
+        assertEquals("APPROVED", DataBaseHelper.getDebitCardTransactionStatus());
     }
 
     //Номер карты со статусом: "DECLINED";
@@ -45,6 +53,7 @@ public class DebitAPITest {
         var statusCode = DataGenerator.getStatusCodeSuccess();
         var response = apiHelper.sendPostStatusSuccess(invalidDebitCard, pathForPay, statusCode);
         assertEquals(DataGenerator.getDeclinedStatus(), response);
+        assertEquals("DECLINED", DataBaseHelper.getDebitCardTransactionStatus());
     }
 
     //Поле 'Номер карты' заполнено рандомным номером;
@@ -58,7 +67,7 @@ public class DebitAPITest {
 
     //Поле 'Номер карты' состоит из одного символа;
     @Test
-    void ClientErrorStatusSendCardWithPartNumberForPay() {
+    void clientErrorStatusSendCardWithPartNumberForPay() {
         var infoHolder = DataGenerator.FormPayment.getPartCardNumber();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -67,7 +76,7 @@ public class DebitAPITest {
 
     //Поле 'Номер карты' не должно принимать более 16 цифр
     @Test
-    void ClientErrorStatusSendMoreDigitsInCardNumberForPay() {
+    void clientErrorStatusSendMoreDigitsInCardNumberForPay() {
         var infoMoreDigitsInCardNumber = DataGenerator.FormPayment.getMoreDigitsInCardNumber();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -76,7 +85,7 @@ public class DebitAPITest {
 
     //буквы и цифры в поле
     @Test
-    void CardNumberWithWordInNumber() {
+    void cardNumberWithWordInNumber() {
         var infoCardNumberWithWordInNumber = DataGenerator.FormPayment.getCardNumberWithWordInNumber();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -85,7 +94,7 @@ public class DebitAPITest {
 
     // поле состоит из букв
     @Test
-    void CardNumberFieldConsistsLetters() {
+    void cardNumberFieldConsistsLetters() {
         var infoCardNumberFieldConsistsLetters = DataGenerator.FormPayment.getCardNumberFieldConsistsOfLetters();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -94,7 +103,7 @@ public class DebitAPITest {
 
     // поле состоит из специальных символов
     @Test
-    void CardNumberFieldWithSpecialCharacters() {
+    void cardNumberFieldWithSpecialCharacters() {
         var infoCardNumberFieldWithSpecialCharacters = DataGenerator.FormPayment.getCardNumberWithoutDigit();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -103,7 +112,7 @@ public class DebitAPITest {
 
     // пустое поле
     @Test
-    void CardNumberFieldIsEmpty() {
+    void cardNumberFieldIsEmpty() {
         var infoCardNumberFieldIsEmpty = DataGenerator.FormPayment.getEmptyCardNumber();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -114,7 +123,7 @@ public class DebitAPITest {
 
     //нули в поле
     @Test
-    void UseMonthDoubleZero() {
+    void useMonthDoubleZero() {
         var infoUseMonthDoubleZero = DataGenerator.FormPayment.getMonthDoubleZeroCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -123,7 +132,7 @@ public class DebitAPITest {
 
     //Поле 'Месяц' заполнено несуществующей датой;
     @Test
-    void InvalidMonthField() {
+    void invalidMonthField() {
         var infoInvalidMonthField = DataGenerator.FormPayment.getMonthOverCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -132,7 +141,7 @@ public class DebitAPITest {
 
     //Поле 'Месяц' состоит из одного символа;
     @Test
-    void MonthFieldConsistsOneCharacters() {
+    void monthFieldConsistsOneCharacters() {
         var infoMonthFieldConsistsOneCharacters = DataGenerator.FormPayment.getOneDigitMonthCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -141,7 +150,7 @@ public class DebitAPITest {
 
     //более 2 цифр
     @Test
-    void UseMoreDigitsInMonth() {
+    void useMoreDigitsInMonth() {
         var infoUseMoreDigitsInMonth = DataGenerator.FormPayment.getMoreDigitsInMonth();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -150,7 +159,7 @@ public class DebitAPITest {
 
     //пустое поле
     @Test
-    void IfMonthFieldEmpty() {
+    void ifMonthFieldEmpty() {
         var infoIfMonthFieldEmpty = DataGenerator.FormPayment.getEmptyMonthFieldCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -159,7 +168,7 @@ public class DebitAPITest {
 
     //Поле 'Месяц' состоит из букв
     @Test
-    void MonthFieldConsistsOfLetters() {
+    void monthFieldConsistsOfLetters() {
         var infoMonthFieldConsistsOfLetters = DataGenerator.FormPayment.getMonthFieldConsistsOfLetters();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -168,7 +177,7 @@ public class DebitAPITest {
 
     //Поле 'Месяц' состоит из спецсимволов
     @Test
-    void MonthFieldWithSpecialCharacters() {
+    void monthFieldWithSpecialCharacters() {
         var infoMonthFieldWithSpecialCharacters = DataGenerator.FormPayment.getMonthFieldWithSpecialCharacters();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -179,7 +188,7 @@ public class DebitAPITest {
 
     // прошлый год
     @Test
-    void PastYear() {
+    void pastYear() {
         var infoPastYear = DataGenerator.FormPayment.getPastYearCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -188,7 +197,7 @@ public class DebitAPITest {
 
     //год, за пределами срока обслуживания карты
     @Test
-    void FutureYearOverCard() {
+    void futureYearOverCard() {
         var infoFutureYearOverCard = DataGenerator.FormPayment.getFutureYearOverCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -197,11 +206,12 @@ public class DebitAPITest {
 
     //последний год обслуживания карты
     @Test
-    void IfLastYearExpirationDate() {
+    void ifLastYearExpirationDate() {
         var infoIfLastYearExpirationDate = DataGenerator.FormPayment.getLastYearExpirationDate();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeSuccess();
         apiHelper.sendPostStatusSuccess(infoIfLastYearExpirationDate, pathForPay, statusCode);
+        assertEquals("APPROVED", DataBaseHelper.getDebitCardTransactionStatus());
     }
 
     //Поле 'Год' состоит из одного символа
@@ -215,7 +225,7 @@ public class DebitAPITest {
 
     //более 2 цифр
     @Test
-    void InFieldUseMoreDigitsInYear() {
+    void inFieldUseMoreDigitsInYear() {
         var infoInFieldUseMoreDigitsInYear = DataGenerator.FormPayment.getMoreDigitsInYearCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -224,7 +234,7 @@ public class DebitAPITest {
 
     // ввод букв
     @Test
-    void InYearFieldConsistsOfLetters() {
+    void inYearFieldConsistsOfLetters() {
         var infoInYearFieldConsistsOfLetters = DataGenerator.FormPayment.getYearFieldConsistsOfLetters();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -233,7 +243,7 @@ public class DebitAPITest {
 
     //Поле 'Год' состоит из спецсимволов;
     @Test
-    void YearFieldWithSpecialCharacters() {
+    void yearFieldWithSpecialCharacters() {
         var infoYearFieldWithSpecialCharacters = DataGenerator.FormPayment.getYearFieldWithSpecialCharacters();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -242,7 +252,7 @@ public class DebitAPITest {
 
     //Поле 'Год' пустое;
     @Test
-    void GetErrorIfYearFieldEmpty() {
+    void getErrorIfYearFieldEmpty() {
         var infoGetErrorIfYearFieldEmpty = DataGenerator.FormPayment.getEmptyYearFieldCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -251,18 +261,19 @@ public class DebitAPITest {
 
     // проверка на текущие месяц и год
     @Test
-    void CardWithCurrentPeriod() {
+    void cardWithCurrentPeriod() {
         var infoCardWithCurrentPeriod = DataGenerator.FormPayment.getCardWithCurrentPeriod();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeSuccess();
         apiHelper.sendPostStatusSuccess(infoCardWithCurrentPeriod, pathForPay, statusCode);
+        assertEquals("APPROVED", DataBaseHelper.getDebitCardTransactionStatus());
     }
 
     // Проверка поля "Владелец";
 
     // поле на кириллице
     @Test
-    void GetErrorIfHolderFieldInCyrillic() {
+    void getErrorIfHolderFieldInCyrillic() {
         var infoGetErrorIfHolderFieldInCyrillic = DataGenerator.FormPayment.getCyrillicHolderCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -271,7 +282,7 @@ public class DebitAPITest {
 
     // ввод спецсимволов
     @Test
-    void GetErrorIfHolderFieldWithSpecialCharacters() {
+    void getErrorIfHolderFieldWithSpecialCharacters() {
         var infoGetErrorIfHolderFieldWithSpecialCharacters = DataGenerator.FormPayment.getSymbolHolderCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -280,7 +291,7 @@ public class DebitAPITest {
 
     // ввод букв и цифр
     @Test
-    void UseCardWithSymbolHolder() {
+    void useCardWithSymbolHolder() {
         var infoUseCardWithSymbolHolder = DataGenerator.FormPayment.getOwnerFieldWithLettersAndNumbers();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -289,7 +300,7 @@ public class DebitAPITest {
 
     // пустое поле
     @Test
-    void FieldEmptyHolder() {
+    void fieldEmptyHolder() {
         var infoFieldEmptyHolder = DataGenerator.FormPayment.getEmptyHolderFieldCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -298,7 +309,7 @@ public class DebitAPITest {
 
     // ввод одной буквы
     @Test
-    void HolderFieldConsistsOneCharacters() {
+    void holderFieldConsistsOneCharacters() {
         var infoHolderFieldConsistsOneCharacters = DataGenerator.FormPayment.getOwnerFieldConsistsOneCharacters();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -307,16 +318,17 @@ public class DebitAPITest {
 
     // ввод двойной фамилии
     @Test
-    void HolderFieldWithDoubleSurname() {
+    void holderFieldWithDoubleSurname() {
         var infoHolderFieldWithDoubleSurname = DataGenerator.FormPayment.getOwnerFieldWithDoubleSurname();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeSuccess();
         apiHelper.sendPostStatusSuccess(infoHolderFieldWithDoubleSurname, pathForPay, statusCode);
+        assertEquals("APPROVED", DataBaseHelper.getDebitCardTransactionStatus());
     }
 
     // проверка на максимальный размер
     @Test
-    void HolderFieldWithMaxLength() {
+    void holderFieldWithMaxLength() {
         var infoHolderFieldWithMaxLength = DataGenerator.FormPayment.getOwnerFieldWithMaxLength();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -327,7 +339,7 @@ public class DebitAPITest {
 
     // ввод одной цифры
     @Test
-    void CVCFieldConsistsOneCharacters() {
+    void fieldCVCConsistsOneCharacters() {
         var infoCVCFieldConsistsOneCharacters = DataGenerator.FormPayment.getOneDigitCvcCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -336,7 +348,7 @@ public class DebitAPITest {
 
     // ввод 3 цифр
     @Test
-    void UseMoreDigitsInCvc() {
+    void useMoreDigitsInCvc() {
         var infoUseMoreDigitsInCvc = DataGenerator.FormPayment.getMoreDigitsInCvcCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -345,7 +357,7 @@ public class DebitAPITest {
 
     // ввод спецсимволов
     @Test
-    void CVCFieldWithSpecialCharacters() {
+    void fieldCVCWithSpecialCharacters() {
         var infoCVCFieldWithSpecialCharacters = DataGenerator.FormPayment.getCVCFieldWithSpecialCharacters();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -354,7 +366,7 @@ public class DebitAPITest {
 
     // ввод букв
     @Test
-    void CVCFieldConsistsOfLetters() {
+    void fieldCVCConsistsOfLetters() {
         var infoCVCFieldConsistsOfLetters = DataGenerator.FormPayment.getCVCFieldConsistsOfLetters();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();
@@ -363,7 +375,7 @@ public class DebitAPITest {
 
     // пустое поле
     @Test
-    void CVCFieldEmpty() {
+    void fieldCVCEmpty() {
         var infoCVCFieldEmpty = DataGenerator.FormPayment.getEmptyCvcFieldCard();
         var pathForPay = DataGenerator.getPayPath();
         var statusCode = DataGenerator.getStatusCodeClientError();

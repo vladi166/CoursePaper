@@ -13,6 +13,7 @@ import ru.netology.page.TitlePage;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.netology.data.DataBaseHelper.cleanDB;
 
 public class CreditCardTest {
 
@@ -29,11 +30,15 @@ public class CreditCardTest {
         titlePage = open("http://localhost:8080", TitlePage.class);
     }
 
+    @BeforeEach
+    void setup() {
+        cleanDB();
+    }
 
     @AfterAll
     static void tearDownAll() {
         SelenideLogger.removeListener("allure");
-        DataBaseHelper.cleanDB();
+        cleanDB();
     }
 
     // Проверка поля "Номер карты";
@@ -50,7 +55,7 @@ public class CreditCardTest {
 
     //Номер карты со статусом: "DECLINED";
     @Test
-    void GetErrorIfInvalidCardNumber() {
+    void getErrorIfInvalidCardNumber() {
         var creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getDeclinedUser();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -78,7 +83,7 @@ public class CreditCardTest {
 
     //Поле 'Номер карты' не должно принимать более 16 цифр
     @Test
-    void UseMoreDigitsInCardNumber() {
+    void useMoreDigitsInCardNumber() {
         creditCard = titlePage.creditCardPayment();
         var cardNumber = DataGenerator.getRandomCardNumber();
         var digit = DataGenerator.getOneDigit();
@@ -87,7 +92,7 @@ public class CreditCardTest {
 
     //буквы и цифры в поле
     @Test
-    void CardNumberWithWordInNumber() {
+    void cardNumberWithWordInNumber() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getCardNumberWithWordInNumber();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -96,7 +101,7 @@ public class CreditCardTest {
 
     // поле состоит из букв
     @Test
-    void CardNumberFieldConsistsLetters() {
+    void cardNumberFieldConsistsLetters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getCardNumberFieldConsistsOfLetters();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -105,7 +110,7 @@ public class CreditCardTest {
 
     // поле состоит из специальных символов
     @Test
-    void CardNumberFieldWithSpecialCharacters() {
+    void cardNumberFieldWithSpecialCharacters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getCardNumberWithoutDigit();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -114,7 +119,7 @@ public class CreditCardTest {
 
     // пустое поле
     @Test
-    void CardNumberFieldIsEmpty() {
+    void cardNumberFieldIsEmpty() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getEmptyCardNumber();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -125,7 +130,7 @@ public class CreditCardTest {
 
     //нули в поле
     @Test
-    void UseMonthDoubleZero() {
+    void useMonthDoubleZero() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getMonthDoubleZeroCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -134,7 +139,7 @@ public class CreditCardTest {
 
     //Поле 'Месяц' заполнено несуществующей датой;
     @Test
-    void InvalidMonthField() {
+    void invalidMonthField() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getMonthOverCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -143,7 +148,7 @@ public class CreditCardTest {
 
     //Поле 'Месяц' состоит из одного символа;
     @Test
-    void MonthFieldConsistsOneCharacters() {
+    void monthFieldConsistsOneCharacters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getOneDigitMonthCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -152,7 +157,7 @@ public class CreditCardTest {
 
     //более 2 цифр
     @Test
-    void UseMoreDigitsInMonth() {
+    void useMoreDigitsInMonth() {
         creditCard = titlePage.creditCardPayment();
         var month = DataGenerator.getRandomMonth();
         var digit = DataGenerator.getOneDigit();
@@ -161,7 +166,7 @@ public class CreditCardTest {
 
     //пустое поле
     @Test
-    void IfMonthFieldEmpty() {
+    void ifMonthFieldEmpty() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getEmptyMonthFieldCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -170,7 +175,7 @@ public class CreditCardTest {
 
     //Поле 'Месяц' состоит из букв
     @Test
-    void MonthFieldConsistsOfLetters() {
+    void monthFieldConsistsOfLetters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getMonthFieldConsistsOfLetters();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -179,7 +184,7 @@ public class CreditCardTest {
 
     //Поле 'Месяц' состоит из спецсимволов
     @Test
-    void MonthFieldWithSpecialCharacters() {
+    void monthFieldWithSpecialCharacters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getMonthFieldWithSpecialCharacters();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -190,7 +195,7 @@ public class CreditCardTest {
 
     // прошлый год
     @Test
-    void PastYear() {
+    void pastYear() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getPastYearCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -199,7 +204,7 @@ public class CreditCardTest {
 
     //год, за пределами срока обслуживания карты
     @Test
-    void FutureYearOverCard() {
+    void futureYearOverCard() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getFutureYearOverCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -208,7 +213,7 @@ public class CreditCardTest {
 
     //последний год обслуживания карты
     @Test
-    void IfLastYearExpirationDate() {
+    void ifLastYearExpirationDate() {
         creditCard = titlePage.creditCardPayment();
         var validCreditCard = DataGenerator.FormPayment.getLastYearExpirationDate();
         creditCard.validFillFieldCreditCard(validCreditCard);
@@ -227,7 +232,7 @@ public class CreditCardTest {
 
     //более 2 цифр
     @Test
-    void InFieldUseMoreDigitsInYear() {
+    void inFieldUseMoreDigitsInYear() {
         creditCard = titlePage.creditCardPayment();
         var year = DataGenerator.getYearFutureInPeriod();
         var digit = DataGenerator.getOneDigit();
@@ -236,7 +241,7 @@ public class CreditCardTest {
 
     // ввод букв
     @Test
-    void InYearFieldConsistsOfLetters() {
+    void inYearFieldConsistsOfLetters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getYearFieldConsistsOfLetters();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -245,7 +250,7 @@ public class CreditCardTest {
 
     //Поле 'Год' состоит из спецсимволов;
     @Test
-    void YearFieldWithSpecialCharacters() {
+    void yearFieldWithSpecialCharacters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getYearFieldWithSpecialCharacters();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -254,7 +259,7 @@ public class CreditCardTest {
 
     //Поле 'Год' пустое;
     @Test
-    void GetErrorIfYearFieldEmpty() {
+    void getErrorIfYearFieldEmpty() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getEmptyYearFieldCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -263,7 +268,7 @@ public class CreditCardTest {
 
     // проверка на текущие месяц и год
     @Test
-    void CardWithCurrentPeriod() {
+    void cardWithCurrentPeriod() {
         creditCard = titlePage.creditCardPayment();
         var validCreditCard = DataGenerator.FormPayment.getCardWithCurrentPeriod();
         creditCard.validFillFieldCreditCard(validCreditCard);
@@ -275,7 +280,7 @@ public class CreditCardTest {
 
     // поле на кириллице
     @Test
-    void GetErrorIfHolderFieldInCyrillic() {
+    void getErrorIfHolderFieldInCyrillic() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getCyrillicHolderCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -284,7 +289,7 @@ public class CreditCardTest {
 
     // ввод спецсимволов
     @Test
-    void GetErrorIfHolderFieldWithSpecialCharacters() {
+    void getErrorIfHolderFieldWithSpecialCharacters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getSymbolHolderCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -293,7 +298,7 @@ public class CreditCardTest {
 
     // ввод букв и цифр
     @Test
-    void UseCardWithSymbolHolder() {
+    void useCardWithSymbolHolder() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getOwnerFieldWithLettersAndNumbers();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -302,7 +307,7 @@ public class CreditCardTest {
 
     // пустое поле
     @Test
-    void FieldEmptyHolder() {
+    void fieldEmptyHolder() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getEmptyHolderFieldCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -311,7 +316,7 @@ public class CreditCardTest {
 
     // ввод одной буквы
     @Test
-    void HolderFieldConsistsOneCharacters() {
+    void holderFieldConsistsOneCharacters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getOwnerFieldConsistsOneCharacters();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -320,7 +325,7 @@ public class CreditCardTest {
 
     // ввод двойной фамилии
     @Test
-    void HolderFieldWithDoubleSurname() {
+    void holderFieldWithDoubleSurname() {
         creditCard = titlePage.creditCardPayment();
         var validCreditCard = DataGenerator.FormPayment.getOwnerFieldWithDoubleSurname();
         creditCard.validFillFieldCreditCard(validCreditCard);
@@ -330,7 +335,7 @@ public class CreditCardTest {
 
     // проверка на максимальный размер
     @Test
-    void HolderFieldWithMaxLength() {
+    void holderFieldWithMaxLength() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getOwnerFieldWithMaxLength();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -341,7 +346,7 @@ public class CreditCardTest {
 
     // ввод одной цифры
     @Test
-    void CVCFieldConsistsOneCharacters() {
+    void fieldCVCConsistsOneCharacters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getOneDigitCvcCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -350,7 +355,7 @@ public class CreditCardTest {
 
     // ввод 3 цифр
     @Test
-    void UseMoreDigitsInCvc() {
+    void useMoreDigitsInCvc() {
         creditCard = titlePage.creditCardPayment();
         var cvc = DataGenerator.getCVC();
         var digit = DataGenerator.getOneDigit();
@@ -359,7 +364,7 @@ public class CreditCardTest {
 
     // ввод спецсимволов
     @Test
-    void CVCFieldWithSpecialCharacters() {
+    void fieldCVCWithSpecialCharacters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getCVCFieldWithSpecialCharacters();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -368,7 +373,7 @@ public class CreditCardTest {
 
     // ввод букв
     @Test
-    void CVCFieldConsistsOfLetters() {
+    void fieldCVCConsistsOfLetters() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getCVCFieldConsistsOfLetters();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
@@ -377,7 +382,7 @@ public class CreditCardTest {
 
     // пустое поле
     @Test
-    void CVCFieldEmpty() {
+    void fieldCVCEmpty() {
         creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.FormPayment.getEmptyCvcFieldCard();
         creditCard.invalidFillFieldCreditCard(invalidCreditCard);
