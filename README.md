@@ -3,8 +3,8 @@
 
 1. [Текст задания](https://github.com/netology-code/aqa-qamid-diplom/blob/main/README.md)
 2. [План автоматизации](https://github.com/vladi166/CoursePaper/blob/main/docs/Plan.md)
-3. [Отчет о проведенном тестировании]()
-4. [Отчет о проведенной автоматизации]()
+3. [Отчет о проведенном тестировании](https://github.com/vladi166/CoursePaper/blob/main/docs/Report.md)
+4. [Отчет о проведенной автоматизации](https://github.com/vladi166/CoursePaper/blob/main/docs/Summary.md)
 
 ## **Инструкция для запуска автотестов**
 
